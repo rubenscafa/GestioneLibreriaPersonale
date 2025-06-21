@@ -33,6 +33,9 @@ public class CatalogoLibri {
 	  public List<Libro> getLibri() {
 	        return Libri;
 	    }
+	  public void setLibri(List<Libro> libri) {
+		  this.Libri=libri;
+	  }
 
 	    public void aggiungiObserver(LibroObserver observer) {
 	        libriObserver.add(observer);
@@ -42,7 +45,7 @@ public class CatalogoLibri {
 	        libriObserver.remove(observer);
 	    }
 
-	    private void notificaObserver() {
+	    public void notificaObserver() {
 	        for (LibroObserver observer : libriObserver) {
 	            observer.onBookListChanged();
 	        }
