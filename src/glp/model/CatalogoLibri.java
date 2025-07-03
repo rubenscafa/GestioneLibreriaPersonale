@@ -1,0 +1,54 @@
+package glp.model;
+import java.util.*;
+
+public class CatalogoLibri {
+	List<Libro> Libri= new ArrayList<>();
+	List<LibroObserver> libriObserver = new ArrayList<>();
+	
+	public void aggiungiLibro(Libro l) {
+		Libri.add(l);
+		notificaObserver();
+	}
+	
+	public void rimuoviLibro(Libro l) {
+		Libri.remove(l);
+		notificaObserver();
+	}
+	public void modificaLibro(Libro l1, Libro l2) {
+		int indice= -1;
+		for(int i =0; i<Libri.size();i++) {
+			if(Libri.get(i).getISBN().equals(l1.getISBN())) {
+				indice=i;
+				break;
+			}
+		}
+		if (indice != -1) {
+            Libri.set(indice, l2);
+            System.out.println("Libro modificato con successo.");
+        } else {
+            System.out.println("Libro da modificare non trovato.");
+        }
+		
+	}
+	
+	  public List<Libro> getLibri() {
+	        return Libri;
+	    }
+	  public void setLibri(List<Libro> libri) {
+		  this.Libri=libri;
+	  }
+
+	    public void aggiungiObserver(LibroObserver observer) {
+	        libriObserver.add(observer);
+	    }
+
+	    public void rimuoviObserver(LibroObserver observer) {
+	        libriObserver.remove(observer);
+	    }
+
+	    public void notificaObserver() {
+	        for (LibroObserver observer : libriObserver) {
+	            observer.onBookListChanged();
+	        }
+	    }
+}
