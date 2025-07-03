@@ -152,28 +152,56 @@ public class AppMain extends Application {
             }
         });
 
-        // Modifica libro selezionato
         modificaButton.setOnAction(e -> {
             int index = listaLibri.getSelectionModel().getSelectedIndex();
             if (index >= 0) {
                 Libro vecchio = controller.facade.getCatalogo().getLibri().get(index);
-                try {
-                    Libro nuovo = new Libro.LibroBuilder()
-                            .setTitolo(titoloField.getText())
-                            .setAutore(autoreField.getText())
-                            .setISBN(isbnField.getText())
-                            .setGenere(genereField.getText())
-                            .setStatus(statusComboBox.getValue())
-                            .setValutazione(valutazioneComboBox.getValue())
-                            .build();
 
-                    controller.modificaLibro(vecchio, nuovo);
-                    listaLibri.getItems().set(index, nuovo.getTitolo() + " - " + nuovo.getAutore() + " (" + nuovo.getISBN() + ") " + nuovo.getGenere() + " - " + nuovo.getStatus() + " - " + nuovo.getValutazione());
+                Libro.LibroBuilder builder = new Libro.LibroBuilder();
+
+                if (!titoloField.getText().equals(vecchio.getTitolo())) {
+                    builder.setTitolo(titoloField.getText());
+                }
+
+                if (!autoreField.getText().equals(vecchio.getAutore())) {
+                    builder.setAutore(autoreField.getText());
+                }
+
+                if (!genereField.getText().equals(vecchio.getGenere())) {
+                    builder.setGenere(genereField.getText());
+                }
+
+                if (!statusComboBox.getValue().equals(vecchio.getStatus())) {
+                    builder.setStatus(statusComboBox.getValue());
+                }
+
+                if (!valutazioneComboBox.getValue().equals(vecchio.getValutazione())) {
+                    builder.setValutazione(valutazioneComboBox.getValue());
+                }
+
+                // ISBN: non lo cambiamo mai, è la chiave
+                builder.setISBN(vecchio.getISBN());
+
+                try {
+                    Libro modifiche = builder.build();
+                    controller.modificaLibro(vecchio, modifiche);
+
+                    // Aggiorna la visualizzazione
+                    Libro libroAggiornato = controller.facade.getCatalogo().getLibri().get(index);
+                    listaLibri.getItems().set(index,
+                        libroAggiornato.getTitolo() + " - " +
+                        libroAggiornato.getAutore() + " (" +
+                        libroAggiornato.getISBN() + ") " +
+                        libroAggiornato.getGenere() + " - " +
+                        libroAggiornato.getStatus() + " - " +
+                        libroAggiornato.getValutazione()
+                    );
+
                 } catch (Exception ex) {
                     System.out.println("Errore nella modifica: " + ex.getMessage());
                 }
-            }
-        });
+            }});
+        
 
         // salvataggio e caricamento catalogo 
         salvaCSVButton.setOnAction(e -> {
