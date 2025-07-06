@@ -153,7 +153,7 @@ public class AppMain extends Application {
             if (index >= 0) {
                 Libro vecchio = controller.facade.getCatalogo().getLibri().get(index);
 
-                Libro.LibroBuilder builder = new Libro.LibroBuilder();
+                LibroBuilder builder = new LibroBuilder();
 
                 if (!titoloField.getText().equals(vecchio.getTitolo())) {
                     builder.setTitolo(titoloField.getText());
@@ -200,8 +200,8 @@ public class AppMain extends Application {
             }});
         
 
-     /*   // salvataggio e caricamento catalogo 
-        salvaCSVButton.setOnAction(e -> {
+        // salvataggio e caricamento catalogo 
+       /* salvaCSVButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Salva Catalogo");
             fileChooser.setInitialFileName("catalogo.csv");

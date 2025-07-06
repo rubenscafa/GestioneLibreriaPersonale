@@ -8,14 +8,6 @@ public class Libro {
 	private int valutazione;
 	private String status;
 	
-	public Libro(LibroBuilder builder) {
-		this.autore= builder.autore;
-		this.titolo= builder.titolo;
-		this.genere= builder.genere;
-		this.ISBN= builder.ISBN;
-		this.valutazione= builder.valutazione;
-		this.status= builder.status;
-	}
 
 	public String getTitolo() {
 		return titolo;
@@ -65,39 +57,5 @@ public class Libro {
 		this.status = status;
 	}
 	
-	public static class LibroBuilder {
-		private String titolo;
-		private String autore;
-		private String ISBN;
-		private String genere;
-		private int valutazione;
-		private String status;
-		
-		public LibroBuilder setTitolo(String titolo) {
-			this.titolo = titolo; return this;
-		}
-		public LibroBuilder setAutore(String autore) {
-			this.autore = autore;return this; 
-			
-		}
-		public LibroBuilder setISBN(String iSBN) {
-			ISBN = iSBN; return this; 
-		}
-		public LibroBuilder setGenere(String genere) {
-			this.genere = genere; return this;
-		}
-		public LibroBuilder setValutazione(int valutazione) {
-			this.valutazione = valutazione; return this;
-		}
-		public LibroBuilder setStatus(String status) {
-			this.status = status; return this;
-		}
-		
-		 public Libro build() {
-	            return new Libro(this);
-	        }
-		
-		
-	}
 
 }

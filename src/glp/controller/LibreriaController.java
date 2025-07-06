@@ -21,7 +21,7 @@ public class LibreriaController{
 		
 	}
 	public void aggiungiLibro(String titolo, String autore, String isbn, String genere, String status, int valutazione) {
-        Libro libro = new Libro.LibroBuilder()
+        Libro libro = new LibroBuilder()
                 .setTitolo(titolo)
                 .setAutore(autore)
                 .setISBN(isbn)
