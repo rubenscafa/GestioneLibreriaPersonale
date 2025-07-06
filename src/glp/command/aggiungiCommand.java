@@ -16,10 +16,5 @@ public class aggiungiCommand implements Command {
     public void execute() {
         catalogo.aggiungiLibro(libro);
     }
-
-	@Override
-	public void undo() {
-		catalogo.rimuoviLibro(libro);
-	}
 	
 }

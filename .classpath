@@ -46,6 +46,11 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/ruben/Downloads/junit-platform-console-standalone-1.10.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/ruben/.m2/repository/org/ow2/asm/asm/9.3/asm-9.3.jar" sourcepath="C:/Users/ruben/.m2/repository/org/ow2/asm/asm/9.3/asm-9.3-sources.jar">
 		<attributes>
 			<attribute name="test" value="true"/>

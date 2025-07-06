@@ -48,8 +48,8 @@ public class LibreriaController{
 		facade.salva(file);
 		System.out.println("Catalogo libri salvato con successo");
 	}
-	private void salvaUltimoCatalogo(String pathCsv) {
-	    try (FileWriter writer = new FileWriter("catalogo.csv")) {
+	public void salvaUltimoCatalogo(String pathCsv) {
+	    try (FileWriter writer = new FileWriter("pathCatalogo.txt")) {
 	        writer.write(pathCsv);
 	    } catch (IOException e) {
 	        e.printStackTrace();
@@ -62,18 +62,10 @@ public class LibreriaController{
 
 	}
 
-	public void undo(Libro attuale, Libro originale) {
-		facade.undo();
+	public List<Libro> filtroPerStringa(String stringa){
+		return filtraggio.getLibriByString(stringa, facade.getCatalogo());
 	}
-	public List<Libro> filtroPerAutore(String autore){
-		return filtraggio.getLibriByAutore(autore, facade.getCatalogo());
-	}
-	public List<Libro> filtroPerGenere(String genere){
-		return filtraggio.getLibriByGenere(genere, facade.getCatalogo());
-	}
-	public List<Libro> filtroPerTitolo(String titolo){
-		return filtraggio.getLibriByTitolo(titolo, facade.getCatalogo());
-	}
+	
 	public List<Libro> filtraPerStatus(String status) {
         return filtraggio.getLibriPerStatus(status, facade.getCatalogo());
     }

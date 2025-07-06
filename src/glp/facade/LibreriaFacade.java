@@ -7,12 +7,14 @@ import glp.command.*;
 import glp.model.*;
 import glp.storage.*;
 import glp.strategy.OrdinamentoImpl;
+import glp.utils.FiltraggioEVisualizzazione;
 
 public class LibreriaFacade {
     private CatalogoLibri catalogo;
     private CommandManager commManager;
     private StorageTM storage;
     private OrdinamentoImpl ordinamento;
+    private FiltraggioEVisualizzazione filtraggio;
 
     public LibreriaFacade(CatalogoLibri catalogo, CommandManager commManager,OrdinamentoImpl ordinamento) {
         this.catalogo = catalogo;
@@ -48,13 +50,6 @@ public class LibreriaFacade {
     	}
     	return libri;
     }
-    public void undo() {
-        commManager.undo();
-        catalogo.notificaObserver();  // per aggiornare la UI dopo l'undo
-    }
-
-
-
     public CatalogoLibri getCatalogo() {
         return this.catalogo;
     }
@@ -63,13 +58,13 @@ public class LibreriaFacade {
         storage.creazioneCSV(catalogo.getLibri(), file);
     }
 
-    public void carica(File file) {
+   public void carica(File file) {
         List<Libro> libriCSV = storage.caricamentoCSV(file);
         catalogo.setLibri(libriCSV);
         catalogo.notificaObserver();
     }
     private void caricaCatalogoIniziale() {
-        File configFile = new File("catalogo.csv");
+        File configFile = new File("pathCatalogo.txt");
 
         if (configFile.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {

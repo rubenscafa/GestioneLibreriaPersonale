@@ -8,10 +8,4 @@ public class CommandManager {
         cmd.execute();
         history.push(cmd);
     }
-    public void undo() {
-        if (!history.isEmpty()) {
-            Command cmd = history.pop();
-            cmd.undo();
-        }
-    }
 }

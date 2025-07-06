@@ -12,17 +12,10 @@ public class modificaCommand implements Command {
         this.catalogo = catalogo;
         this.libroOriginale = libroOriginale;
         this.libroModificato = libroModificato;
-        this.backup = libroOriginale.saveToMemento(); 
     }
 
     @Override
     public void execute() {
         catalogo.modificaLibro(libroOriginale, libroModificato);
-    }
-
-    @Override
-    public void undo() {
-        libroOriginale.restoreFromMemento(backup); 
-        catalogo.aggiungiLibro(libroOriginale);
     }
 }

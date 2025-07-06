@@ -25,7 +25,7 @@ import java.util.List;
 
 public class AppMain extends Application {
     private LibreriaController controller;
-    private static final String CONFIG_FILE = "catalogo.csv";
+    private static final String CONFIG_FILE = "pathcatalogo.txt";
     
     private String leggiUltimoCatalogo() {
         try (BufferedReader reader = new BufferedReader(new FileReader(CONFIG_FILE))) {
@@ -66,7 +66,7 @@ public class AppMain extends Application {
         TextField autoreField = new TextField();
 
         Label isbnLabel = new Label("ISBN:");
-        TextField isbnField = new TextField();
+        TextField isbnField = new TextField("ISBN-");
 
         Label genereLabel = new Label("Genere:");
         TextField genereField = new TextField();
@@ -95,20 +95,11 @@ public class AppMain extends Application {
         Button annullaButton = new Button ("Annulla operazione");
         Button ordinaPerValutazione = new Button ("Ordine per valutazione");
 
-        TextField filtroAutoreField = new TextField();
-        filtroAutoreField.setPromptText("Filtra per autore");
-        Button filtraAutoreButton = new Button("🔎");
-        HBox filtroAutoreBox = new HBox(5, filtroAutoreField, filtraAutoreButton);
+        TextField ricercaField = new TextField();
+        ricercaField.setPromptText(" Ricerca Libro");
+        Button ricercaLibroButton = new Button("🔎");
+        HBox ricercaLibroBox = new HBox(5, ricercaField, ricercaLibroButton);
 
-        TextField filtroGenereField = new TextField();
-        filtroGenereField.setPromptText("Filtra per genere");
-        Button filtraGenereButton = new Button("🔎");
-        HBox filtroGenereBox = new HBox(5, filtroGenereField, filtraGenereButton);
-
-        TextField filtroTitoloField = new TextField();
-        filtroTitoloField.setPromptText("Filtra per titolo");
-        Button filtraTitoloButton = new Button("🔎");
-        HBox filtroTitoloBox = new HBox(5, filtroTitoloField, filtraTitoloButton);
 
         TextField filtroStatusField = new TextField();
         filtroStatusField.setPromptText("Filtra per status");
@@ -117,9 +108,10 @@ public class AppMain extends Application {
 
         Button mostraTuttiButton = new Button("Mostra Tutti");
 
-        // aggiungi libro 
+        
         aggiungiButton.setOnAction(e -> {
             try {
+            	File cat = new File(ultimoCatalogo);
                 String titolo = titoloField.getText();
                 String autore = autoreField.getText();
                 String isbn = isbnField.getText();
@@ -135,24 +127,28 @@ public class AppMain extends Application {
                 autoreField.clear();
                 isbnField.clear();
                 genereField.clear();
-                statusComboBox.setValue("letto"); // reset valore di default
-                valutazioneComboBox.setValue(1);  // reset valore di default
+                statusComboBox.setValue("letto");
+                valutazioneComboBox.setValue(1);
+                controller.salvaCSV(cat);
             } catch (Exception ex) {
                 System.out.println("Errore nell'inserimento: " + ex.getMessage());
             }
         });
 
-        // Rimozione libro selezionato
+        
         rimuoviButton.setOnAction(e -> {
+        	File cat = new File(ultimoCatalogo);
             int index = listaLibri.getSelectionModel().getSelectedIndex();
             if (index >= 0) {
                 Libro libro = controller.facade.getCatalogo().getLibri().get(index);
                 controller.rimuoviLibro(libro);
                 listaLibri.getItems().remove(index);
+                controller.salvaCSV(cat);
             }
         });
 
         modificaButton.setOnAction(e -> {
+        	File cat = new File(ultimoCatalogo);
             int index = listaLibri.getSelectionModel().getSelectedIndex();
             if (index >= 0) {
                 Libro vecchio = controller.facade.getCatalogo().getLibri().get(index);
@@ -179,14 +175,14 @@ public class AppMain extends Application {
                     builder.setValutazione(valutazioneComboBox.getValue());
                 }
 
-                // ISBN: non lo cambiamo mai, è la chiave
+                
                 builder.setISBN(vecchio.getISBN());
 
                 try {
                     Libro modifiche = builder.build();
                     controller.modificaLibro(vecchio, modifiche);
 
-                    // Aggiorna la visualizzazione
+                    
                     Libro libroAggiornato = controller.facade.getCatalogo().getLibri().get(index);
                     listaLibri.getItems().set(index,
                         libroAggiornato.getTitolo() + " - " +
@@ -196,6 +192,7 @@ public class AppMain extends Application {
                         libroAggiornato.getStatus() + " - " +
                         libroAggiornato.getValutazione()
                     );
+                    controller.salvaCSV(cat);
 
                 } catch (Exception ex) {
                     System.out.println("Errore nella modifica: " + ex.getMessage());
@@ -203,7 +200,7 @@ public class AppMain extends Application {
             }});
         
 
-        // salvataggio e caricamento catalogo 
+     /*   // salvataggio e caricamento catalogo 
         salvaCSVButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Salva Catalogo");
@@ -232,32 +229,14 @@ public class AppMain extends Application {
                     System.out.println("Errore nel caricamento: " + ex.getMessage());
                 }
             }
-        });
+        });*/
         
         
 
-        // operazioni di filtraggio e ordinamento
-        filtraAutoreButton.setOnAction(e -> {
-            String autore = filtroAutoreField.getText();
-            List<Libro> filtrati = controller.filtroPerAutore(autore);
-            listaLibri.getItems().clear();
-            for (Libro l : filtrati) {
-                listaLibri.getItems().add(formattaLibro(l));
-            }
-        });
-
-        filtraGenereButton.setOnAction(e -> {
-            String genere = filtroGenereField.getText();
-            List<Libro> filtrati = controller.filtroPerGenere(genere);
-            listaLibri.getItems().clear();
-            for (Libro l : filtrati) {
-                listaLibri.getItems().add(formattaLibro(l));
-            }
-        });
-
-        filtraTitoloButton.setOnAction(e -> {
-            String titolo = filtroTitoloField.getText();
-            List<Libro> filtrati = controller.filtroPerTitolo(titolo);
+       
+        ricercaLibroButton.setOnAction(e -> {
+            String parametro= ricercaField.getText();
+            List<Libro> filtrati = controller.filtroPerStringa(parametro);
             listaLibri.getItems().clear();
             for (Libro l : filtrati) {
                 listaLibri.getItems().add(formattaLibro(l));
@@ -289,7 +268,7 @@ public class AppMain extends Application {
             }
         });
 
-        // Layout form principale
+        
         VBox form = new VBox(15,
                 titoloLabel, titoloField,
                 autoreLabel, autoreField,
@@ -298,13 +277,11 @@ public class AppMain extends Application {
                 statusBox,valutazioneBox,
                 aggiungiButton, rimuoviButton, modificaButton
         );
-        form.setPadding(new Insets(0, 0, 0, 20)); // sopra, destra, sotto, sinitra
+        form.setPadding(new Insets(0, 0, 0, 20)); 
         VBox form2 = new VBox(15,
-                salvaCSVButton,
-                caricaCSVButton,
-                new Label("Filtra per autore:"),filtroAutoreBox,
-                new Label("Filtra per genere:"),filtroGenereBox,
-                new Label("Filtra per titolo:"),filtroTitoloBox,
+                //salvaCSVButton,
+                //caricaCSVButton,
+                ricercaLibroBox,
                 new Label("Filtra per status:"),filtroStatusBox,
                 ordinaPerValutazione,
                 mostraTuttiButton
@@ -321,7 +298,7 @@ public class AppMain extends Application {
         StagePrimario.setScene(scene);
         StagePrimario.show();
 
-        mostraTuttiButton.fire(); // mostra tutti all'avvio
+        mostraTuttiButton.fire(); 
     }
 
     private String formattaLibro(Libro libro) {

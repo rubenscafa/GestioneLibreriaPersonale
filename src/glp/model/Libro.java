@@ -99,17 +99,5 @@ public class Libro {
 		
 		
 	}
-	 public LibroMemento saveToMemento() {
-	        return new LibroMemento(titolo, autore, ISBN, genere, valutazione, status);
-	    }
-
-	    public void restoreFromMemento(LibroMemento memento) {
-	        this.titolo = memento.getTitolo();
-	        this.autore = memento.getAutore();
-	        this.ISBN = memento.getISBN();
-	        this.genere = memento.getGenere();
-	        this.valutazione = memento.getValutazione();
-	        this.status = memento.getStatus();
-	    }
 
 }
