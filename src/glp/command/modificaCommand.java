@@ -5,8 +5,7 @@ import glp.model.*;
 public class modificaCommand implements Command {
     private CatalogoLibri catalogo;
     private Libro libroOriginale;      
-    private Libro libroModificato;     
-    private LibroMemento backup;       
+    private Libro libroModificato;           
 
     public modificaCommand(CatalogoLibri catalogo, Libro libroOriginale, Libro libroModificato) {
         this.catalogo = catalogo;

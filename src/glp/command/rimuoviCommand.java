@@ -2,7 +2,6 @@ package glp.command;
 
 import glp.model.CatalogoLibri;
 import glp.model.Libro;
-import glp.model.LibroMemento;
 
 public class rimuoviCommand implements Command {
 	private CatalogoLibri catalogo;

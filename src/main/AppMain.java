@@ -14,6 +14,8 @@ import glp.controller.LibreriaController;
 import glp.facade.LibreriaFacade;
 import glp.utils.FiltraggioEVisualizzazione;
 import glp.model.*;
+import glp.observer.AutoSaveObserver;
+import glp.observer.ListViewObserver;
 import glp.command.*;
 import glp.strategy.*;
 
@@ -56,6 +58,11 @@ public class AppMain extends Application {
                 }
             }
         }
+        
+        File cat = new File(ultimoCatalogo);
+        catalogo.aggiungiObserver(new AutoSaveObserver(catalogo,cat));
+        catalogo.aggiungiObserver(new ListViewObserver(listaLibri, catalogo));
+
 
 
         // Componenti UI
@@ -111,7 +118,6 @@ public class AppMain extends Application {
         
         aggiungiButton.setOnAction(e -> {
             try {
-            	File cat = new File(ultimoCatalogo);
                 String titolo = titoloField.getText();
                 String autore = autoreField.getText();
                 String isbn = isbnField.getText();
@@ -121,7 +127,6 @@ public class AppMain extends Application {
 
                 controller.aggiungiLibro(titolo, autore, isbn, genere, status, valutazione);
 
-                listaLibri.getItems().add(titolo + " - " + autore + " (" + isbn + ") " + genere + " - " + status + " - " + valutazione);
 
                 titoloField.clear();
                 autoreField.clear();
@@ -129,7 +134,6 @@ public class AppMain extends Application {
                 genereField.clear();
                 statusComboBox.setValue("letto");
                 valutazioneComboBox.setValue(1);
-                controller.salvaCSV(cat);
             } catch (Exception ex) {
                 System.out.println("Errore nell'inserimento: " + ex.getMessage());
             }
@@ -137,67 +141,37 @@ public class AppMain extends Application {
 
         
         rimuoviButton.setOnAction(e -> {
-        	File cat = new File(ultimoCatalogo);
             int index = listaLibri.getSelectionModel().getSelectedIndex();
             if (index >= 0) {
                 Libro libro = controller.facade.getCatalogo().getLibri().get(index);
                 controller.rimuoviLibro(libro);
-                listaLibri.getItems().remove(index);
-                controller.salvaCSV(cat);
             }
         });
 
         modificaButton.setOnAction(e -> {
-        	File cat = new File(ultimoCatalogo);
             int index = listaLibri.getSelectionModel().getSelectedIndex();
+
             if (index >= 0) {
                 Libro vecchio = controller.facade.getCatalogo().getLibri().get(index);
 
-                LibroBuilder builder = new LibroBuilder();
+                String titolo = titoloField.getText();
+                String autore = autoreField.getText();
+                String genere = genereField.getText();
+                String status = statusComboBox.getValue();
+                Integer valutazione = valutazioneComboBox.getValue();
 
-                if (!titoloField.getText().equals(vecchio.getTitolo())) {
-                    builder.setTitolo(titoloField.getText());
-                }
-
-                if (!autoreField.getText().equals(vecchio.getAutore())) {
-                    builder.setAutore(autoreField.getText());
-                }
-
-                if (!genereField.getText().equals(vecchio.getGenere())) {
-                    builder.setGenere(genereField.getText());
-                }
-
-                if (!statusComboBox.getValue().equals(vecchio.getStatus())) {
-                    builder.setStatus(statusComboBox.getValue());
-                }
-
-                if (!valutazioneComboBox.getValue().equals(vecchio.getValutazione())) {
-                    builder.setValutazione(valutazioneComboBox.getValue());
-                }
-
-                
-                builder.setISBN(vecchio.getISBN());
+                LibroDirector director = new LibroDirector();
+                Libro modificato = director.costruisciLibroParziale(vecchio, titolo, autore, genere, status, valutazione);
 
                 try {
-                    Libro modifiche = builder.build();
-                    controller.modificaLibro(vecchio, modifiche);
-
-                    
-                    Libro libroAggiornato = controller.facade.getCatalogo().getLibri().get(index);
-                    listaLibri.getItems().set(index,
-                        libroAggiornato.getTitolo() + " - " +
-                        libroAggiornato.getAutore() + " (" +
-                        libroAggiornato.getISBN() + ") " +
-                        libroAggiornato.getGenere() + " - " +
-                        libroAggiornato.getStatus() + " - " +
-                        libroAggiornato.getValutazione()
-                    );
-                    controller.salvaCSV(cat);
+                    controller.modificaLibro(vecchio, modificato);
 
                 } catch (Exception ex) {
                     System.out.println("Errore nella modifica: " + ex.getMessage());
                 }
-            }});
+            }
+        });
+
         
 
         // salvataggio e caricamento catalogo 
@@ -263,9 +237,7 @@ public class AppMain extends Application {
 
         mostraTuttiButton.setOnAction(e -> {
             listaLibri.getItems().clear();
-            for (Libro l : controller.facade.getCatalogo().getLibri()) {
-                listaLibri.getItems().add(formattaLibro(l));
-            }
+            catalogo.notificaObserver();
         });
 
         

@@ -1,7 +1,10 @@
 package glp.model;
 import java.util.*;
 
-public class CatalogoLibri {
+import glp.observer.*;
+import glp.observer.Observable;
+
+public class CatalogoLibri implements Observable {
 	List<Libro> Libri= new ArrayList<>();
 	List<LibroObserver> libriObserver = new ArrayList<>();
 	
@@ -62,7 +65,7 @@ public class CatalogoLibri {
 	  }
 
 	    public void aggiungiObserver(LibroObserver observer) {
-	        libriObserver.add(observer);
+	        libriObserver.add(observer);    
 	    }
 
 	    public void rimuoviObserver(LibroObserver observer) {
@@ -71,7 +74,7 @@ public class CatalogoLibri {
 
 	    public void notificaObserver() {
 	        for (LibroObserver observer : libriObserver) {
-	            observer.onBookListChanged();
+	            observer.aggiorna();
 	        }
 	    }
 }
