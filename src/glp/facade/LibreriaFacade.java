@@ -12,15 +12,16 @@ import glp.utils.FiltraggioEVisualizzazione;
 public class LibreriaFacade {
     private CatalogoLibri catalogo;
     private CommandManager commManager;
-    private StorageTM storage;
+    private AbstractStorageTM storage;
     private OrdinamentoImpl ordinamento;
     private FiltraggioEVisualizzazione filtraggio;
 
     public LibreriaFacade(CatalogoLibri catalogo, CommandManager commManager,OrdinamentoImpl ordinamento) {
         this.catalogo = catalogo;
         this.commManager = commManager;
-        this.storage = new StorageTM(); 
         this.ordinamento = ordinamento;
+        this.storage = new StorageTM();
+        this.filtraggio = new FiltraggioEVisualizzazione();
     }
 
     public void aggiuntaLibro(Libro l) {
@@ -50,16 +51,23 @@ public class LibreriaFacade {
     	}
     	return libri;
     }
+    public List<Libro> filtroPerStatus(String status) {
+        return filtraggio.getLibriPerStatus(status, catalogo);
+    }
+
+    public List<Libro> filtroPerStringa(String stringa) {
+        return filtraggio.getLibriByString(stringa, catalogo);
+    }
     public CatalogoLibri getCatalogo() {
         return this.catalogo;
     }
 
     public void salva(File file) {
-        storage.creazioneCSV(catalogo.getLibri(), file);
+        storage.salvaCatalogo(catalogo.getLibri(), file);
     }
 
    public void carica(File file) {
-        List<Libro> libriCSV = storage.caricamentoCSV(file);
+        List<Libro> libriCSV = storage.caricaCatalogo(file);
         catalogo.setLibri(libriCSV);
         catalogo.notificaObserver();
     }
@@ -72,7 +80,7 @@ public class LibreriaFacade {
                 if (percorso != null && !percorso.isBlank()) {
                     File fileCatalogo = new File(percorso);
                     if (fileCatalogo.exists()) {
-                        List<Libro> libri = storage.caricamentoCSV(fileCatalogo);
+                        List<Libro> libri = storage.caricaCatalogo(fileCatalogo);
                         catalogo.setLibri(libri);
                         catalogo.notificaObserver();
                         System.out.println("Catalogo caricato automaticamente da: " + percorso);

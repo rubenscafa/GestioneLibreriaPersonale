@@ -21,6 +21,8 @@ import glp.strategy.*;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.util.List;
@@ -48,19 +50,28 @@ public class AppMain extends Application {
         FiltraggioEVisualizzazione filtraggio = new FiltraggioEVisualizzazione();
         controller = new LibreriaController(facade, filtraggio);
         String ultimoCatalogo = leggiUltimoCatalogo();
-        if (ultimoCatalogo != null) {
-            File file = new File(ultimoCatalogo);
-            if (file.exists()) {
-                controller.caricaCSV(file);
+        File fileCatalogo;
+
+        if (ultimoCatalogo != null && !ultimoCatalogo.isBlank()) {
+            fileCatalogo = new File(ultimoCatalogo);
+            if (fileCatalogo.exists()) {
+            	controller.caricaCSV(fileCatalogo);
                 listaLibri.getItems().clear();
                 for (Libro l : controller.facade.getCatalogo().getLibri()) {
                     listaLibri.getItems().add(formattaLibro(l));
                 }
+              }
+        } else {
+            fileCatalogo = new File("catalogo.csv");
+            fileCatalogo.createNewFile(); 
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
+                writer.write(fileCatalogo.getAbsolutePath());
             }
+
+            controller.salvaCSV(fileCatalogo);
         }
         
-        File cat = new File(ultimoCatalogo);
-        catalogo.aggiungiObserver(new AutoSaveObserver(catalogo,cat));
+        catalogo.aggiungiObserver(new AutoSaveObserver(catalogo,fileCatalogo));
         catalogo.aggiungiObserver(new ListViewObserver(listaLibri, catalogo));
 
 

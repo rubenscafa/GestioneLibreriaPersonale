@@ -10,12 +10,17 @@ public abstract class AbstractStorageTM {
         creazioneCSV(libri, file);
         conferma();
     }
+    public final List<Libro> caricaCatalogo(File file) {
+         conferma();
+         return caricamentoCSV(file);
+		
+    }
 
     protected abstract void creazioneCSV(List<Libro> libri, File file);
 
     protected abstract List<Libro> caricamentoCSV(File file);
 
     protected void conferma() {
-        System.out.println("Salvataggio eseguito con successo\n");
+        System.out.println("Operazione eseguita con successo\n");
     }
 }

@@ -11,8 +11,6 @@ import glp.utils.*;
 public class LibreriaController{
 	public LibreriaFacade facade;
 	private FiltraggioEVisualizzazione filtraggio;
-	private CommandManager commManager;
-	private CatalogoLibri catalogo;
 
 	
 	public LibreriaController(LibreriaFacade facade, FiltraggioEVisualizzazione filtraggio) {
@@ -21,7 +19,7 @@ public class LibreriaController{
 		
 	}
 	public void aggiungiLibro(String titolo, String autore, String isbn, String genere, String status, int valutazione) {
-        Libro libro = new LibroBuilder()
+        Libro libro = new Libro.LibroBuilder()
                 .setTitolo(titolo)
                 .setAutore(autore)
                 .setISBN(isbn)
@@ -62,12 +60,12 @@ public class LibreriaController{
 
 	}
 
-	public List<Libro> filtroPerStringa(String stringa){
-		return filtraggio.getLibriByString(stringa, facade.getCatalogo());
-	}
-	
 	public List<Libro> filtraPerStatus(String status) {
-        return filtraggio.getLibriPerStatus(status, facade.getCatalogo());
-    }
+	    return facade.filtroPerStatus(status);
+	}
+
+	public List<Libro> filtroPerStringa(String stringa) {
+	    return facade.filtroPerStringa(stringa);
+	}
 	
 }

@@ -1,9 +1,11 @@
 package glp.model;
 
+import glp.model.Libro.LibroBuilder;
+
 public class LibroDirector {
 
     public Libro costruisciLibroParziale(Libro originale, String titolo, String autore, String genere, String status, Integer valutazione) {
-        LibroBuilder builder = new LibroBuilder();
+        LibroBuilder builder = new Libro.LibroBuilder();
 
         builder.setTitolo((titolo == null || titolo.isBlank()) ? originale.getTitolo() : titolo);
         builder.setAutore((autore == null || autore.isBlank()) ? originale.getAutore() : autore);

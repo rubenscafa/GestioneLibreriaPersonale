@@ -2,7 +2,6 @@ package glp.storage;
 
 import java.util.*;
 import glp.model.Libro;
-import glp.model.LibroBuilder;
 
 import java.io.*;
 
@@ -38,7 +37,7 @@ public class StorageTM extends AbstractStorageTM {
                     try {
                         int valutazione = Integer.parseInt(campi[5]);
 
-                        Libro libro = new LibroBuilder()
+                        Libro libro = new Libro.LibroBuilder()
                                 .setTitolo(campi[0])
                                 .setAutore(campi[1])
                                 .setISBN(campi[2])

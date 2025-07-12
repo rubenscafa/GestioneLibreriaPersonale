@@ -4,7 +4,7 @@ import java.util.*;
 import glp.observer.*;
 import glp.observer.Observable;
 
-public class CatalogoLibri implements Observable {
+public class CatalogoLibri extends Observable {
 	List<Libro> Libri= new ArrayList<>();
 	List<LibroObserver> libriObserver = new ArrayList<>();
 	
@@ -63,7 +63,6 @@ public class CatalogoLibri implements Observable {
 	  public void setLibri(List<Libro> libri) {
 		  this.Libri=libri;
 	  }
-
 	    public void aggiungiObserver(LibroObserver observer) {
 	        libriObserver.add(observer);    
 	    }

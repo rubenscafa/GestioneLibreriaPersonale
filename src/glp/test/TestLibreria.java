@@ -63,7 +63,7 @@ public class TestLibreria {
         Libro l = creaLibroBase("ISBN999");
         controller.facade.getCatalogo().aggiungiLibro(l);
 
-        Libro nuovo = new LibroBuilder()
+        Libro nuovo = new Libro.LibroBuilder()
                 .setTitolo("Modificato")
                 .setAutore("Autore")
                 .setISBN("ISBN999")
@@ -89,7 +89,7 @@ public class TestLibreria {
     }
 
     private Libro creaLibroBase(String isbn) {
-        return new LibroBuilder()
+        return new Libro.LibroBuilder()
                 .setTitolo("Titolo")
                 .setAutore("Autore")
                 .setISBN(isbn)
