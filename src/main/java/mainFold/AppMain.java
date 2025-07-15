@@ -1,4 +1,4 @@
-package main;
+package mainFold;
 
 import javafx.application.*;
 import javafx.geometry.Insets;
